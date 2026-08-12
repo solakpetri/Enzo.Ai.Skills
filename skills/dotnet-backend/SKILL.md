@@ -10,8 +10,6 @@ Use this skill when working on production .NET backend systems.
 
 Inspect the repository before changing code. Follow existing conventions, naming, layering, libraries, and testing patterns before introducing new ones. Do not impose Clean Architecture, CQRS, MediatR, repository layers, or other patterns unless the repository already uses them or the change clearly benefits from them.
 
-Prefer simple solutions over unnecessary abstractions. Make the smallest coherent change that solves the problem.
-
 ## General Principles
 
 - Keep business logic separate from transport and infrastructure concerns.
@@ -34,6 +32,7 @@ Prefer simple solutions over unnecessary abstractions. Make the smallest coheren
 - Put business rules in application or domain services, not controllers.
 - Return consistent error responses. Prefer `ProblemDetails` for server-side API errors.
 - Validate requests at the boundary before executing business logic.
+- Keep transport validation at the boundary, but enforce business invariants in application or domain logic as well so they are not HTTP-only.
 - Distinguish between create, update, delete, and query operations clearly.
 - Be explicit about route shape, response codes, and contracts.
 
@@ -42,6 +41,7 @@ Prefer simple solutions over unnecessary abstractions. Make the smallest coheren
 - Respect the existing architecture first.
 - Separate transport, application logic, domain logic, and infrastructure concerns even in smaller projects.
 - Do not let controllers, endpoints, or handlers accumulate persistence and orchestration logic.
+- Prefer simple solutions over unnecessary abstractions.
 - Avoid generic repository abstractions that merely duplicate `DbContext`.
 - Introduce abstractions when they isolate a real boundary, external dependency, or complex policy.
 
@@ -154,7 +154,7 @@ public Task<OrderDto> GetOrderAsync(Guid id, CancellationToken cancellationToken
 
 - Start by reading the existing flow end to end.
 - Match the repository's patterns unless they block the requested change or are clearly unsafe.
-- Make incremental changes that preserve behavior.
+- Make the smallest coherent change that preserves behavior.
 - Separate cleanup from functional changes when possible.
 - Avoid broad rewrites when a targeted fix will do.
 - If the current design has issues, improve the local area without forcing a full architecture migration.
@@ -163,7 +163,6 @@ public Task<OrderDto> GetOrderAsync(Guid id, CancellationToken cancellationToken
 
 - Inspect the affected project structure, startup wiring, tests, and local conventions first.
 - Identify the real execution path before editing.
-- Make the smallest coherent change.
 - Update or add tests when the repository has test coverage for the affected area.
 - Build the affected projects before considering implementation complete.
 - If feasible, run the relevant tests for the changed area.

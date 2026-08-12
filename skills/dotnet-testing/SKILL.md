@@ -10,18 +10,16 @@ Use this skill when creating, debugging, or reviewing automated tests in .NET ap
 
 Inspect the repository's existing test projects before writing tests. Follow its established test frameworks, assertion libraries, mocking libraries, naming conventions, fixture patterns, helper utilities, and project structure. Do not introduce a new test stack when the repository already has one.
 
-Prefer meaningful tests over chasing coverage percentages. Choose the smallest test level that reliably proves the behavior.
-
 ## Testing Philosophy
 
 - Test behavior rather than implementation details.
+- Prefer meaningful tests over chasing coverage percentages.
 - Prefer tests that increase confidence in important application behavior and catch regressions.
 - Avoid tests that merely reproduce implementation details.
 - Avoid tests that only prove framework behavior.
 - Keep tests deterministic.
 - Ensure tests can run independently.
 - Avoid test-order dependencies.
-- Make the smallest coherent test change that proves the requirement.
 
 ## Choosing The Test Level
 
@@ -108,7 +106,8 @@ Prefer meaningful tests over chasing coverage percentages. Choose the smallest t
 ## EF Core And Database Testing
 
 - Do not assume EF Core InMemory behaves like a relational database.
-- Prefer the real database engine or an appropriate disposable database for persistence behavior where relational semantics matter.
+- Prefer the closest practical relational engine already used by the repository.
+- Use the real provider or an appropriate disposable relational database when SQL translation, constraints, migrations, transactions, or concurrency semantics matter.
 - Use EF Core InMemory only when its limitations are acceptable for the specific behavior.
 - Test constraints, transactions, query behavior, concurrency, and relational semantics against a realistic store.
 - Isolate database state per test or per fixture so tests remain independent.
@@ -167,7 +166,6 @@ Prefer meaningful tests over chasing coverage percentages. Choose the smallest t
 
 - Inspect the existing test projects and conventions first.
 - Identify the behavior that actually needs proof.
-- Choose the smallest reliable test level.
 - Reuse existing fixtures, helpers, and patterns where they help.
 - Add only the setup needed for the scenario.
 - Run the targeted tests after implementation.
