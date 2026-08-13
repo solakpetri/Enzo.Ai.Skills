@@ -207,4 +207,4 @@ Please keep skills:
 
 ## License
 
-Free :)
+This project is licensed under the [MIT License](LICENSE).
