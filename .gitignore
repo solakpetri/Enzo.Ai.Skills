@@ -1,0 +1,12 @@
+# IDE
+.idea/
+.vs/
+.vscode/
+
+# Packaged skill archives
+dist/
+*.zip
+
+# Pro editions are proprietary and live in a separate private repository.
+# Never commit them here: anything pushed to this public repository stays public.
+*-pro/
