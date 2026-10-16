@@ -14,6 +14,22 @@ Agent Skills are self-contained instruction sets stored as `SKILL.md` files. The
 | [`code-review`](skills/code-review/) | Review guidance for .NET code changes, pull requests, patches, and proposed implementations. |
 | [`architecture-review`](skills/architecture-review/) | Architecture review guidance for .NET application boundaries, dependencies, coupling, data flow, reliability, scalability, deployment, persistence, and integrations. |
 
+## Pro Editions
+
+The skills in this repository are free and will stay free under the MIT License.
+
+Pro editions are available on [Agensi](https://www.agensi.io) for teams that want deeper guidance. Each Pro edition builds on the free skill and adds detailed reference material, production-readiness checklists, reusable templates, and helper scripts. Updates reach your agent automatically through the Agensi connector.
+
+| Free skill | Pro edition |
+| --- | --- |
+| [`dotnet-backend`](skills/dotnet-backend/) | `dotnet-backend-pro` (coming soon) |
+| [`dotnet-testing`](skills/dotnet-testing/) | `dotnet-testing-pro` (coming soon) |
+| [`ef-core`](skills/ef-core/) | `ef-core-pro` (coming soon) |
+| [`code-review`](skills/code-review/) | `code-review-pro` (coming soon) |
+| [`architecture-review`](skills/architecture-review/) | `architecture-review-pro` (coming soon) |
+
+Pro editions use distinct skill names, so you can install them next to the free skills. When both are available, the Pro edition takes precedence.
+
 ## Installation / Usage
 
 The exact installation flow depends on the agent you use, but the general approach is the same:
