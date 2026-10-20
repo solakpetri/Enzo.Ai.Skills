@@ -1,10 +1,12 @@
-# .NET Agent Skills
+# Agent Skills for .NET and Rust
 
-Reusable Agent Skills that provide AI coding agents with practical guidance for building, testing, reviewing, and maintaining .NET applications.
+Reusable Agent Skills that provide AI coding agents with practical guidance for building, testing, reviewing, and maintaining .NET and Rust applications.
 
 Agent Skills are self-contained instruction sets stored as `SKILL.md` files. They give compatible agents focused, reusable guidance for a specific task or domain without hard-coding project-specific assumptions.
 
 ## Available Skills
+
+### .NET
 
 | Skill | Description |
 | --- | --- |
@@ -13,6 +15,20 @@ Agent Skills are self-contained instruction sets stored as `SKILL.md` files. The
 | [`ef-core`](skills/ef-core/) | Practical guidance for designing, implementing, optimizing, troubleshooting, and reviewing Entity Framework Core persistence code. |
 | [`code-review`](skills/code-review/) | Review guidance for .NET code changes, pull requests, patches, and proposed implementations. |
 | [`architecture-review`](skills/architecture-review/) | Architecture review guidance for .NET application boundaries, dependencies, coupling, data flow, reliability, scalability, deployment, persistence, and integrations. |
+
+### Rust
+
+| Skill | Description |
+| --- | --- |
+| [`rust-core`](skills/rust-core/) | Idiomatic Rust guidance for ownership, borrowing, lifetimes, type-driven design, traits and generics, error handling, public API design, semver, Cargo workspaces, features, lints, and documentation. |
+| [`rust-async`](skills/rust-async/) | Guidance for asynchronous and concurrent Rust, including Tokio, `Send` and `Sync` bounds, blocking work, cancellation safety, structured concurrency, shutdown, locks, channels, backpressure, and timeouts. |
+| [`rust-backend`](skills/rust-backend/) | Production-oriented guidance for Rust backend services across Axum and similar frameworks, tower middleware, state, validation, error mapping, configuration, tracing, outbound HTTP, auth, and graceful shutdown. |
+| [`rust-testing`](skills/rust-testing/) | Practical guidance for Rust tests, including unit, integration, doc, async, HTTP, and database tests, test doubles, property-based and snapshot testing, `loom`, Miri, fuzzing, and benchmarks. |
+| [`rust-database`](skills/rust-database/) | Guidance for database access with sqlx, Diesel, or SeaORM, including pools, transactions, concurrency control, constraints, pagination, bulk operations, dynamic SQL safety, and migrations. |
+| [`rust-performance`](skills/rust-performance/) | Guidance for measuring and improving Rust runtime performance, memory use, compile time, and binary size, from profiling and allocation discipline to release profiles, PGO, and allocators. |
+| [`rust-unsafe-ffi`](skills/rust-unsafe-ffi/) | Guidance for writing and auditing unsafe Rust and FFI, including soundness, safety contracts, undefined behavior, raw pointers, panic safety, ownership across language boundaries, and Miri. |
+| [`rust-code-review`](skills/rust-code-review/) | Review guidance for Rust code changes, pull requests, patches, and proposed implementations. |
+| [`rust-architecture-review`](skills/rust-architecture-review/) | Architecture review guidance for Rust crate and workspace boundaries, dependency direction, runtime topology, shared state, features, supply chain, build time, deployment, and integrations. |
 
 ## Installation / Usage
 
@@ -44,8 +60,13 @@ The simplest approach is to copy one or more skill directories into a supported 
 │   └── SKILL.md
 ├── code-review/
 │   └── SKILL.md
-└── architecture-review/
-    └── SKILL.md
+├── architecture-review/
+│   └── SKILL.md
+├── rust-core/
+│   └── SKILL.md
+├── rust-async/
+│   └── SKILL.md
+└── ...
 ```
 
 OpenCode also supports registering an external skills directory through `skills.paths` in `opencode.json`:
@@ -54,7 +75,7 @@ OpenCode also supports registering an external skills directory through `skills.
 {
   "$schema": "https://opencode.ai/config.json",
   "skills": {
-    "paths": ["/path/to/dotnet-agent-skills/skills"]
+    "paths": ["/path/to/Enzo.Ai.Skills/skills"]
   }
 }
 ```
@@ -159,10 +180,146 @@ Identify concrete architectural risks and explain their tradeoffs.
 Do not recommend microservices or additional abstractions unless they solve a demonstrated problem.
 ```
 
+### Rust Core
+
+[`rust-core`](skills/rust-core/)
+
+```text
+Add a parser for the order import file format.
+
+Inspect the crate's existing error types, module layout, and lints first.
+
+Parse input into validated domain types, return a structured error type instead of panicking, and avoid unnecessary clones and allocations.
+
+Run cargo clippy --all-targets and the relevant tests when finished.
+```
+
+### Rust Async
+
+[`rust-async`](skills/rust-async/)
+
+```text
+Add a background worker that consumes order events from the queue.
+
+Inspect the existing runtime setup and shutdown handling first.
+
+Bound concurrency, keep blocking work off the runtime threads, make sure cancellation cannot lose messages, and wire the worker into graceful shutdown.
+
+Add tests using paused Tokio time and run them.
+```
+
+### Rust Backend
+
+[`rust-backend`](skills/rust-backend/)
+
+```text
+Add a POST /orders endpoint that creates a new order.
+
+Inspect the existing service first and follow its framework, state, error, and module conventions.
+
+Validate the request, persist the order, map errors to the existing error response format, enforce authorization, and add relevant tests through the router.
+
+Run cargo check, cargo clippy, and the relevant tests when finished.
+```
+
+### Rust Testing
+
+[`rust-testing`](skills/rust-testing/)
+
+```text
+Add tests for order submission.
+
+An order with no order lines must not be submitted.
+
+Inspect the existing test layout and dev-dependencies and follow their conventions.
+
+Cover the successful case and important failure cases. Choose the smallest test level that reliably proves the behavior, and avoid adding traits only for mocking.
+
+Run the relevant tests, including doctests, when finished.
+```
+
+### Rust Database
+
+[`rust-database`](skills/rust-database/)
+
+```text
+Add a query that returns the 20 most recent orders for a customer.
+
+Return only:
+- order id
+- created date
+- status
+- total amount
+
+Inspect the existing data-access code first. Use explicit columns, bind parameters, deterministic ordering, and keyset pagination.
+
+Add tests against the real database engine and run them.
+```
+
+### Rust Performance
+
+[`rust-performance`](skills/rust-performance/)
+
+```text
+The order export endpoint is slow for large customers.
+
+Profile a release build with realistic data before changing anything.
+
+Fix the measured bottleneck, add a criterion benchmark that protects the improvement, and report before and after numbers.
+
+Do not add unsafe code or change global build settings without explaining the tradeoff.
+```
+
+### Rust Unsafe And FFI
+
+[`rust-unsafe-ffi`](skills/rust-unsafe-ffi/)
+
+```text
+Audit the unsafe code in the ring buffer module.
+
+Do not modify any files.
+
+For each unsafe block, verify the SAFETY reasoning, check whether safe code in the module can break the invariants, and check panic safety.
+
+Report unsound APIs with a concrete triggering sequence of safe calls.
+```
+
+### Rust Code Review
+
+[`rust-code-review`](skills/rust-code-review/)
+
+```text
+Review the changes in the current branch against the default branch.
+
+Do not modify any files.
+
+Focus on defects introduced by the change, especially correctness, reachable panics, unsafe soundness, async cancellation, locks held across await, data integrity, security, and semver breaks.
+
+For each finding, provide the severity, location, concrete failure scenario, consequence, and recommended direction.
+
+Do not manufacture findings if the change is sound.
+```
+
+### Rust Architecture Review
+
+[`rust-architecture-review`](skills/rust-architecture-review/)
+
+```text
+Review the architecture of this Rust workspace.
+
+Do not modify any files.
+
+Evaluate crate boundaries, dependency direction, runtime topology, shared state, data ownership, feature design, dependency risk, build time, and deployment.
+
+Identify concrete architectural risks and explain their tradeoffs.
+
+Do not recommend splitting crates or services unless it solves a demonstrated problem.
+```
+
 ## Repository Structure
 
 ```text
-dotnet-agent-skills/
+Enzo.Ai.Skills/
 ├── skills/
 │   ├── architecture-review/
 │   │   └── SKILL.md
@@ -172,8 +329,27 @@ dotnet-agent-skills/
 │   │   └── SKILL.md
 │   ├── dotnet-testing/
 │   │   └── SKILL.md
-│   └── ef-core/
+│   ├── ef-core/
+│   │   └── SKILL.md
+│   ├── rust-architecture-review/
+│   │   └── SKILL.md
+│   ├── rust-async/
+│   │   └── SKILL.md
+│   ├── rust-backend/
+│   │   └── SKILL.md
+│   ├── rust-code-review/
+│   │   └── SKILL.md
+│   ├── rust-core/
+│   │   └── SKILL.md
+│   ├── rust-database/
+│   │   └── SKILL.md
+│   ├── rust-performance/
+│   │   └── SKILL.md
+│   ├── rust-testing/
+│   │   └── SKILL.md
+│   └── rust-unsafe-ffi/
 │       └── SKILL.md
+├── LICENSE
 └── README.md
 ```
 
@@ -195,7 +371,7 @@ Contributions are welcome for:
 - improving existing skills
 - correcting inaccurate guidance
 - adding useful examples
-- proposing new .NET-focused skills
+- proposing new .NET- or Rust-focused skills
 
 Please keep skills:
 
